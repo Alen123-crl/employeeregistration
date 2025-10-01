@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-blue-100 min-h-screen">
+
+  <!-- Top Navbar -->
+  <div class="flex justify-between items-center bg-white shadow p-4">
+    <h1 id="head1" class="text-xl font-semibold text-blue-700">Welcome user</h1>
+    <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Logout</button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container mx-auto p-6 flex flex-col lg:flex-row items-center lg:items-start gap-10">
+
+    <!-- Left Image -->
+    <div class="w-full lg:w-1/2 flex justify-center">
+      <img src="https://cdn.hifives.in/wp-content/uploads/2022/02/5-1.png"
+           alt="employee illustration" class="w-3/4">
+    </div>
+
+    <!-- Right Content -->
+    <div class="w-full lg:w-1/2 space-y-6">
+
+      <!-- Add Employee Form -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-lg font-semibold text-blue-700 mb-4">Add Employee Details</h2>
+        <form id="employeeForm" class="space-y-4">
+          <input type="text" placeholder="Employee Id" id="empId" class="w-full border rounded px-3 py-2">
+          <input type="text" placeholder="Employee Name" id="empName" class="w-full border rounded px-3 py-2">
+          <input type="text" placeholder="Employee Address" id="empAddress" class="w-full border rounded px-3 py-2">
+          <input type="text" placeholder="Employee Designation" id="empDesignation" class="w-full border rounded px-3 py-2">
+          <input type="text" placeholder="Employee Experience" id="empExperience" class="w-full border rounded px-3 py-2">
+          <input type="text" placeholder="Employee Salary" id="empSalary" class="w-full border rounded px-3 py-2">
+
+          <button type="button" onclick="addEmployee()" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+            Add Employee
+          </button>
+        </form>
+      </div>
+
+      <!-- Search Employee -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-lg font-semibold text-blue-700 mb-4">Search Employee</h2>
+        <div class="flex gap-3">
+          <input type="text" placeholder="Search Id" id="searchId" class="flex-1 border rounded px-3 py-2">
+          <button onclick="searchemp()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Search</button>
+        </div>
+        <!-- Results Section -->
+        <div id="result" class="mt-4"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Show username
+  const username = localStorage.getItem('USERNAME');
+  if (username) {
+    document.getElementById('head1').innerHTML = `Welcome ${username}`;
+  }
+
+  // Add Employee
+  function addEmployee() {
+    const emp = {
+      id: empId.value,
+      name: empName.value,
+      address: empAddress.value,
+      designation: empDesignation.value,
+      experience: empExperience.value,
+      salary: empSalary.value,
+    };
+
+    if (!emp.id || !emp.name || !emp.address || !emp.designation || !emp.experience || !emp.salary) {
+      alert("Please fill the form completely");
+      return;
+    }
+
+    if (localStorage.getItem(emp.id)) {
+      alert("Employee already exists");
+    } else {
+      localStorage.setItem(emp.id, JSON.stringify(emp));
+      alert("Employee added successfully");
+      document.getElementById("employeeForm").reset();
+    }
+  }
+
+  // Search Employee
+  function searchemp() {
+    const empid = document.getElementById("searchId").value;
+    const employee = JSON.parse(localStorage.getItem(empid));
+
+    if (employee) {
+      document.getElementById("result").innerHTML = `
+        <div class="p-4 border rounded-lg bg-white shadow">
+          <p><strong>ID:</strong> ${employee.id}</p>
+          <p><strong>NAME:</strong> ${employee.name}</p>
+          <p><strong>ADDRESS:</strong> ${employee.address}</p>
+          <p><strong>DESIGNATION:</strong> ${employee.designation}</p>
+          <p><strong>EXPERIENCE:</strong> ${employee.experience}</p>
+          <p><strong>SALARY:</strong> ${employee.salary}</p>
+        </div>`;
+    } else {
+      document.getElementById("result").innerHTML = `<p class="text-red-600">Employee not found</p>`;
+    }
+  }
+
+  // Logout
+  function logout() {
+    localStorage.removeItem('USERNAME');
+    alert("Logged out successfully");
+    window.location.href = "index.html"; // redirect to login page
+  }
+</script>
+
+</body>
+</html>
+
